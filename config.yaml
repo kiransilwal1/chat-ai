@@ -1,0 +1,21 @@
+# Configuration file for CodeAssistant
+# This file contains model settings such as the model path, context size, GPU layers, and threading options.
+
+# The path to the GGUF model file.
+# Ensure the model file exists at this location before running the application.
+model_path: "/Users/kiransilwal/MachineLearning/LLM/DeepSeek-R1-Distill-Qwen-32B-GGUF/DeepSeek-R1-Distill-Qwen-32B-IQ2_XXS.gguf"
+
+# Model to generate summary of a previous chat, recommended to use model with less parameters
+# Select gguf with high context size but low parameters
+summary_model_path: "/Users/kiransilwal/MachineLearning/LLM/DeepSeek-R1-Distill-Qwen-32B-GGUF/DeepSeek-R1-Distill-Qwen-32B-IQ2_XXS.gguf"
+# The size of the context window (number of tokens the model can handle in a single request).
+# A larger context size allows for longer conversations but may require more memory.
+context_size: 4096
+
+# The number of layers to offload to the GPU.
+# Higher values improve performance but require more VRAM.
+gpu_layers: 100
+
+# The number of CPU threads to use for inference.
+# Increase this value for better performance on multi-core processors.
+threads: 16
