@@ -14,7 +14,7 @@ class PathContextRepository(IPathContextRepository):
         return "This is a summary"
 
     async def get_summaries(self) -> str:
-        return "I got a summary for you"
+        return await self._datasource.get_summaries()
 
     async def limit_context(self, text: str) -> str:
         return ""
