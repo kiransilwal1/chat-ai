@@ -12,23 +12,26 @@ class LlmModelRepository(ILlmLoaderRepository):
         n_threads: int,
         n_gpu_layers: int,
         system_prompts: str,
+        use_metal: bool | None,
     ):
         self._llama_model_path = llama_model_path
         self._n_context_size = n_context_size
         self._n_threads = n_threads
         self._n_gpu_layers = n_gpu_layers
         self._system_prompts = system_prompts
+        self._use_metal = use_metal
 
     async def load_model(
         self,
     ) -> Llama:
+        print(f"Initializing with {self._system_prompts}")
         model: Llama = Llama(
-            verbose=False,
+            verbose=True,
             model_path=self._llama_model_path,
             n_ctx=self._n_context_size,
             n_gpu_layers=self._n_gpu_layers,
             n_threads=self._n_threads,
-            use_metal=True,
+            use_metal=self._use_metal,
             temperature=0,
             stop=["User:", ">>>"],
             system_prompts=self._system_prompts,

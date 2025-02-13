@@ -18,18 +18,15 @@ class ChatExplorerSqlite(IChatExplorerDatasource):
 
         # Query the database
         db_chats = (
-            session.query(ChatData).filter(ChatData.chat_path_id == path_id).all()
+            session.query(ChatData).filter(ChatData.chat_path_id == int(path_id)).all()
         )
         session.close()  # Close the session after use
 
         # Convert database results to ChatEntity objects
         chats: List[ChatEntity] = []
-        for db_chat in db_chats:
+        for chat in chats:
             chats.append(
-                ChatEntity(
-                    id=db_chat.id, full_chat=db_chat.full_chat, summary=db_chat.summary
-                )
+                ChatEntity(id=chat.id, full_chat=chat.full_chat, summary=chat.summary)
             )
 
-        print(f"Chats inside datasource: {chats}")
         return chats

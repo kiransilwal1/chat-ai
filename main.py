@@ -83,9 +83,7 @@ async def start(
                     )  # Extract the value
                     print(f"Chat List : {chat_list}")
                     for chat in chat_list:
-                        print(
-                            f"Chat ID: {chat.id}, Full Chat: {chat.full_chat}, Summary: {chat.summary}"
-                        )
+                        print(f"Chat ID: {chat.id}, Summary: {chat.summary}")
                 else:
                     print(f"Error: {chats.unwrap()}")  # Handle failure case
                 # print(chats.value)
@@ -95,8 +93,10 @@ async def start(
 
 
 async def main():
+    # DATABASE_URL = f"sqlite:///{os.path.expanduser('~')}/.chatai/db.sqlite"
+    # CONFIG_FILE = f"{os.path.expanduser('~')}/.chatai/config.yaml"
     DATABASE_URL = f"sqlite:///{os.path.expanduser('~')}/.chatai/db.sqlite"
-    CONFIG_FILE = f"{os.path.expanduser('~')}/.chatai/config.yaml"
+    CONFIG_FILE = f"{os.getcwd()}/config.yaml"
 
     # LLM Responder
     engine = create_engine(DATABASE_URL, echo=True)
@@ -115,19 +115,22 @@ async def main():
     context_size_int: int = int(context_size) if context_size is not None else 1024
     threads: str | None = config.get("context_size")
     threads_int: int = int(threads) if threads is not None else 16
+    use_metal: bool | None = True if config.get("metal") == "True" else False
     llm_repo: ILlmLoaderRepository = LlmModelRepository(
         llama_model_path=llm_path,
         n_context_size=context_size_int,
         n_threads=threads_int,
         n_gpu_layers=100,
         system_prompts="You are an AI assistant, Be concise. Just respond to what user asks and do not add anything from your side on the context",
+        use_metal=use_metal,
     )
     summary_repo: ILlmLoaderRepository = LlmModelRepository(
         llama_model_path=summarizer_model,
-        n_context_size=4096,
+        n_context_size=100000,
         n_threads=threads_int,
         n_gpu_layers=100,
         system_prompts="You are a summarizer. Your job is to summarize conversation between the user and the chatbot in as much low words as possible keeping the context clean",
+        use_metal=use_metal,
     )
     path_data: IPathContextDatasource = PathContextSqlite(datasource=SessionLocal)
     path_context_repo: IPathContextRepository = PathContextRepository(
